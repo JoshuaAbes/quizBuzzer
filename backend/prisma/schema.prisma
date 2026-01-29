@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// MODELS
+// ============================================
+
+model Game {
+  id                   String        @id @default(uuid())
+  code                 String        @unique // Ex: "chat-bleu-42"
+  status               GameStatus    @default(LOBBY)
+  currentQuestionIndex Int           @default(0)
+  mcToken              String        @unique // Token pour authentifier le MC
+  allowNegativePoints  Boolean       @default(false) // Optionnel: -1 pour mauvaise réponse
+  createdAt            DateTime      @default(now())
+  finishedAt           DateTime?
+  
+  players              Player[]
+  questions            Question[]
+  questionStates       QuestionState[]
+  buzzEvents           BuzzEvent[]
+
+  @@index([code])
+  @@index([status])
+}
+
+enum GameStatus {
+  LOBBY      // En attente, joueurs rejoignent
+  RUNNING    // Partie en cours
+  PAUSED     // MC déconnecté ou pause manuelle
+  FINISHED   // Terminé
+}
+
+model Player {
+  id          String    @id @default(uuid())
+  gameId      String
+  name        String
+  score       Int       @default(0)
+  token       String    @unique // Token pour authentifier le joueur
+  isConnected Boolean   @default(true)
+  joinedAt    DateTime  @default(now())
+  
+  game        Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  buzzEvents  BuzzEvent[]
+  
+  // Pour le lock par question
+  lockedQuestions QuestionState[] @relation("LockedPlayers")
+  wonQuestions    QuestionState[] @relation("WinnerPlayer")
+
+  @@index([gameId])
+  @@index([token])
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  gameId    String
+  index     Int      // Position dans le quiz (0, 1, 2...)
+  text      String   // Question affichée
+  answer    String?  // Réponse officielle (optionnelle)
+  points    Int      @default(1)
+  timeLimit Int?     // Timeout en secondes (optionnel)
+  createdAt DateTime @default(now())
+  
+  game           Game            @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  questionStates QuestionState[]
+  buzzEvents     BuzzEvent[]
+
+  @@unique([gameId, index])
+  @@index([gameId])
+}
+
+model QuestionState {
+  id              String              @id @default(uuid())
+  gameId          String
+  questionId      String
+  status          QuestionStateStatus @default(IDLE)
+  winnerPlayerId  String?
+  openedAt        DateTime?
+  lockedAt        DateTime?
+  resolvedAt      DateTime?
+  
+  game           Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  question       Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  winnerPlayer   Player?  @relation("WinnerPlayer", fields: [winnerPlayerId], references: [id])
+  lockedPlayers  Player[] @relation("LockedPlayers")
+
+  @@unique([gameId, questionId])
+  @@index([gameId])
+  @@index([questionId])
+  @@index([status])
+}
+
+enum QuestionStateStatus {
+  IDLE      // Pas encore ouverte
+  OPEN      // Buzz ouvert
+  LOCKED    // Premier buzz reçu, en attente jugement
+  RESOLVED  // Question terminée (correcte ou passée)
+}
+
+model BuzzEvent {
+  id               String          @id @default(uuid())
+  gameId           String
+  questionId       String
+  playerId         String
+  clientTimestamp  DateTime        // Timestamp côté client
+  serverTimestamp  DateTime        @default(now()) // Timestamp autoritaire
+  result           BuzzEventResult
+  
+  game     Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  player   Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@index([gameId, questionId])
+  @@index([serverTimestamp])
+}
+
+enum BuzzEventResult {
+  WINNER           // Premier buzz, devient le winner
+  TOO_LATE         // Buzz après qu'un autre ait gagné
+  REJECTED_LOCKED  // Joueur bloqué pour cette question
+  REJECTED_NOT_OPEN // Buzz alors que la question n'est pas ouverte
+}
