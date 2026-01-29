@@ -58,6 +58,12 @@ export class BuzzerService {
       },
     });
 
+    console.log('handleBuzz - questionState:', {
+      status: questionState?.status,
+      lockedPlayers: questionState?.lockedPlayers,
+      playerId,
+    });
+
     if (!questionState) {
       // Enregistrer l'événement comme rejeté
       await this.createBuzzEvent(
@@ -152,6 +158,8 @@ export class BuzzerService {
     isCorrect: boolean,
     mcToken: string,
   ) {
+    console.log('judgeBuzz called with:', { gameId, questionId, playerId, isCorrect });
+    
     // Vérifier MC token
     const game = await this.prisma.game.findUnique({
       where: { id: gameId },
@@ -171,9 +179,14 @@ export class BuzzerService {
       throw new NotFoundException('Question introuvable');
     }
 
+    console.log('Before findUnique questionState:', { gameId, questionId, questionStateKey: { gameId, questionId } });
+    
     const questionState = await this.prisma.questionState.findUnique({
       where: {
-        gameId_questionId: { gameId, questionId },
+        gameId_questionId: { 
+          gameId: gameId, 
+          questionId: questionId 
+        },
       },
     });
 

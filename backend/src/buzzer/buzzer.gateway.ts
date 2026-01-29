@@ -134,8 +134,21 @@ export class BuzzerGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     try {
       const clientData = client.data as ClientData;
+      
+      this.logger.log(`MC attempting to open buzz. Data received: ${JSON.stringify(data)}, ClientData: ${JSON.stringify(clientData)}`);
+      
       if (clientData.role !== 'mc') {
         return { success: false, error: 'Seul le MC peut ouvrir le buzz' };
+      }
+
+      if (!clientData.gameId) {
+        this.logger.error('No gameId in clientData');
+        return { success: false, error: 'Session invalide, reconnectez-vous' };
+      }
+
+      if (!data || !data.questionId) {
+        this.logger.error('No questionId in data:', data);
+        return { success: false, error: 'Question ID manquant' };
       }
 
       await this.buzzerService.openBuzz(clientData.gameId, data.questionId);
@@ -163,8 +176,16 @@ export class BuzzerGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     try {
       const clientData = client.data as ClientData;
+      
+      this.logger.log(`Player buzz attempt. Data: ${JSON.stringify(data)}, ClientData: ${JSON.stringify(clientData)}`);
+      
       if (!clientData.playerId) {
         return { success: false, error: 'Non authentifié' };
+      }
+
+      if (!data || !data.questionId) {
+        this.logger.error('No questionId in buzz data:', data);
+        return { success: false, error: 'Question ID manquant' };
       }
 
       const result = await this.buzzerService.handleBuzz(
@@ -211,8 +232,16 @@ export class BuzzerGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     try {
       const clientData = client.data as ClientData;
+      
+      this.logger.log(`MC judge_buzz attempt. Data: ${JSON.stringify(data)}, ClientData: ${JSON.stringify(clientData)}`);
+      
       if (clientData.role !== 'mc') {
         return { success: false, error: 'Seul le MC peut juger' };
+      }
+
+      if (!data || !data.questionId) {
+        this.logger.error('No questionId in judge_buzz data:', data);
+        return { success: false, error: 'Question ID manquant' };
       }
 
       const game = await this.prisma.game.findUnique({
@@ -237,6 +266,9 @@ export class BuzzerGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         // Envoyer le scoreboard mis à jour
         await this.sendScoreboard(clientData.gameId);
+        
+        // Envoyer l'état mis à jour du jeu
+        await this.sendGameState(clientData.gameId);
       } else {
         // Notifier que la réponse est fausse + réouverture
         this.emitToGame(clientData.gameId, 'buzz:wrong', {
@@ -254,6 +286,10 @@ export class BuzzerGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.emitToGame(clientData.gameId, 'question:reopened', {
           questionId: data.questionId,
         });
+        
+        // Envoyer le scoreboard et l'état mis à jour
+        await this.sendScoreboard(clientData.gameId);
+        await this.sendGameState(clientData.gameId);
       }
 
       return { success: true, result };
