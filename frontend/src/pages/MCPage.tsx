@@ -38,6 +38,18 @@ export default function MCPage() {
     }
   }, [urlCode, game])
 
+  // Surveiller les changements de statut du jeu
+  useEffect(() => {
+    if (!game) return
+    
+    console.log('MC - Game status changed to:', game.status, 'Current step:', step)
+    
+    if (game.status === 'RUNNING' && step === 'lobby') {
+      console.log('MC - Switching to running mode')
+      setStep('running')
+    }
+  }, [game?.status])
+
   useEffect(() => {
     if (!socketEnabled || !socket) return
 
@@ -195,7 +207,7 @@ export default function MCPage() {
   }
 
   async function handleFinishGame() {
-    if (!code || !mcToken) return
+    if (!code || !mcToken || !socket) return
     try {
       const response = await fetch(`http://localhost:3000/games/${code}/finish?mcToken=${mcToken}`, {
         method: 'POST',
@@ -205,9 +217,16 @@ export default function MCPage() {
       })
       if (!response.ok) throw new Error('Erreur lors de la fin du jeu')
       showNotification('🏁 Quiz terminé !')
+      
       // Recharger le jeu pour voir le statut FINISHED
       const updatedGame = await getGame(code)
       setGame(updatedGame)
+      
+      // Notifier tous les clients via WebSocket en émettant un événement custom
+      // Le backend recevra cet événement et renverra game:state à tous
+      socket.emit('mc:game_finished', {}, (response: any) => {
+        console.log('mc:game_finished response:', response)
+      })
     } catch (err: any) {
       alert(`Erreur: ${err.message}`)
     }
@@ -332,10 +351,94 @@ export default function MCPage() {
 
   // === STEP 3: Partie en cours ===
   if (step === 'running') {
-    // Utiliser socket.gameState pour les données en temps réel
-    const currentGameState = socket?.gameState || game
+    // Utiliser game en priorité car il a les données complètes, puis socket.gameState pour les mises à jour temps réel
+    const currentGameState = game || socket?.gameState
     const currentQuestion = currentGameState?.currentQuestion || currentGameState?.questions?.[currentGameState?.currentQuestionIndex]
-    const currentState = currentGameState?.currentQuestionState
+    const currentState = socket?.gameState?.currentQuestionState || currentGameState?.currentQuestionState
+
+    console.log('MCPage render - status:', currentGameState?.status, 'step:', step)
+
+    // Si le jeu est terminé, afficher l'écran de fin
+    if (currentGameState?.status === 'FINISHED') {
+      const sortedPlayers = [...(currentGameState?.players || [])].sort((a, b) => b.score - a.score)
+      
+      console.log('Showing finish screen, players:', sortedPlayers)
+      
+      return (
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h1>🏁 Quiz terminé !</h1>
+          
+          {/* Notification temporaire */}
+          {notification && (
+            <div style={{
+              position: 'fixed',
+              top: '20px',
+              right: '20px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              padding: '15px 20px',
+              borderRadius: '8px',
+              fontSize: '18px',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+              zIndex: 1000,
+            }}>
+              {notification}
+            </div>
+          )}
+
+          <div style={{ 
+            margin: '40px auto', 
+            maxWidth: '600px',
+            backgroundColor: '#f5f5f5',
+            padding: '30px',
+            borderRadius: '10px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}>
+            <h2 style={{ marginBottom: '30px' }}>🏆 Classement Final</h2>
+            
+            {sortedPlayers.map((player, index) => (
+              <div 
+                key={player.id}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '15px 20px',
+                  margin: '10px 0',
+                  backgroundColor: index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'white',
+                  borderRadius: '8px',
+                  fontSize: '20px',
+                  fontWeight: index < 3 ? 'bold' : 'normal',
+                }}
+              >
+                <span>
+                  {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`} {player.name}
+                </span>
+                <span style={{ fontSize: '24px' }}>{player.score} pts</span>
+              </div>
+            ))}
+          </div>
+
+          <button 
+            onClick={() => {
+              navigate('/')
+            }}
+            style={{ 
+              fontSize: '20px', 
+              padding: '15px 30px', 
+              backgroundColor: '#2196F3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              marginTop: '20px'
+            }}
+          >
+            🏠 Retour à l'accueil
+          </button>
+        </div>
+      )
+    }
 
     return (
       <div style={{ padding: '20px' }}>

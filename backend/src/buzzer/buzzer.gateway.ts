@@ -159,6 +159,9 @@ export class BuzzerGateway implements OnGatewayConnection, OnGatewayDisconnect {
         timestamp: new Date(),
       });
 
+      // Envoyer l'état mis à jour du jeu
+      await this.sendGameState(clientData.gameId);
+
       return { success: true };
     } catch (error) {
       this.logger.error('Error in mc:open_buzz', error);
@@ -202,6 +205,9 @@ export class BuzzerGateway implements OnGatewayConnection, OnGatewayDisconnect {
         playerName: result.playerName,
         timestamp: new Date(),
       });
+
+      // Envoyer l'état mis à jour du jeu
+      await this.sendGameState(clientData.gameId);
 
       return { success: true, result };
     } catch (error) {
@@ -322,9 +328,35 @@ export class BuzzerGateway implements OnGatewayConnection, OnGatewayDisconnect {
         question: result.question,
       });
 
+      // Envoyer l'état mis à jour du jeu
+      await this.sendGameState(clientData.gameId);
+
       return { success: true, result };
     } catch (error) {
       this.logger.error('Error in mc:next_question', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  /**
+   * MC a terminé le jeu - notifier tous les clients
+   */
+  @SubscribeMessage('mc:game_finished')
+  async handleGameFinished(@ConnectedSocket() client: Socket) {
+    try {
+      const clientData = client.data as ClientData;
+      if (clientData.role !== 'mc') {
+        return { success: false, error: 'Seul le MC peut terminer le jeu' };
+      }
+
+      this.logger.log('Game finished, sending updated state to all clients');
+      
+      // Envoyer l'état mis à jour à tous les clients
+      await this.sendGameState(clientData.gameId);
+
+      return { success: true };
+    } catch (error) {
+      this.logger.error('Error in mc:game_finished', error);
       return { success: false, error: error.message };
     }
   }

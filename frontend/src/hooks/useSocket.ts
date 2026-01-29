@@ -48,7 +48,12 @@ export function useSocket({ code, token, role }: UseSocketOptions) {
 
     // Game state
     newSocket.on('game:state', (data: any) => {
-      console.log('📊 Game state:', data)
+      console.log('📊 Game state received:', { 
+        status: data.status, 
+        currentQuestionIndex: data.currentQuestionIndex,
+        currentQuestionState: data.currentQuestionState?.status,
+        playersCount: data.players?.length 
+      })
       setGameState(data)
     })
 
