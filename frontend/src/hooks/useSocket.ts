@@ -1,7 +1,9 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { io, Socket } from 'socket.io-client'
 
-const SOCKET_URL = 'http://localhost:3000'
+const SOCKET_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:3000'
+  : 'http://192.168.115.112:3000'
 
 interface UseSocketOptions {
   code: string

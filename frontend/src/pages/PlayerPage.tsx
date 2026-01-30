@@ -425,7 +425,7 @@ export default function PlayerPage() {
               fontSize: '42px',
               textTransform: 'uppercase',
             }}>
-              🏆 SCOREBOARD
+              SCOREBOARD
             </h2>
             
             {sortedPlayers.map((p, index) => (
@@ -465,7 +465,7 @@ export default function PlayerPage() {
               width: '100%',
             }}
           >
-            🏠 RETOUR À L'ACCUEIL
+            RETOUR À L'ACCUEIL
           </button>
         </div>
       )

@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:3000'
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:3000'
+  : 'http://192.168.115.112:3000'
 
 export interface Game {
   id: string

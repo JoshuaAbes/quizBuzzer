@@ -55,7 +55,7 @@ export default function ScreenPage() {
 
   return (
     <div style={{ padding: '40px', textAlign: 'center', fontSize: '24px' }}>
-      <h1 style={{ fontSize: '48px' }}>📺 QuizBuzzer</h1>
+      <h1 style={{ fontSize: '48px' }}>QuizBuzzer</h1>
       <h2 style={{ fontSize: '36px' }}>Code: {code}</h2>
 
       {game.status === 'LOBBY' && (
@@ -116,12 +116,12 @@ export default function ScreenPage() {
 
       {game.status === 'FINISHED' && (
         <div style={{ marginTop: '50px' }}>
-          <h2 style={{ fontSize: '48px' }}>🎉 Partie terminée !</h2>
+          <h2 style={{ fontSize: '48px' }}>Partie terminée !</h2>
           <h3>Classement final</h3>
           <table border={2} cellPadding={15} style={{ margin: '0 auto', fontSize: '28px' }}>
             <thead>
               <tr>
-                <th>🏆</th>
+                <th></th>
                 <th>Joueur</th>
                 <th>Score</th>
               </tr>

@@ -763,21 +763,39 @@ export default function MCPage() {
                 FAUX
               </button>
               
-              <button
-                onClick={handleNextQuestion}
-                style={{
-                  padding: '20px 40px',
-                  fontSize: '32px',
-                  fontWeight: '600',
-                  backgroundColor: '#555',
-                  color: 'white',
-                  borderRadius: '15px',
-                  flex: '1',
-                  minWidth: '140px',
-                }}
-              >
-                PASSER
-              </button>
+              {(currentGameState?.currentQuestionIndex || 0) < ((currentGameState?.questions?.length || 1) - 1) ? (
+                <button
+                  onClick={handleNextQuestion}
+                  style={{
+                    padding: '20px 40px',
+                    fontSize: '32px',
+                    fontWeight: '600',
+                    backgroundColor: '#555',
+                    color: 'white',
+                    borderRadius: '15px',
+                    flex: '1',
+                    minWidth: '140px',
+                  }}
+                >
+                  PASSER
+                </button>
+              ) : (
+                <button
+                  onClick={handleFinishGame}
+                  style={{
+                    padding: '20px 40px',
+                    fontSize: '32px',
+                    fontWeight: '600',
+                    backgroundColor: '#3B713A',
+                    color: 'white',
+                    borderRadius: '15px',
+                    flex: '1',
+                    minWidth: '140px',
+                  }}
+                >
+                  🏁 FINIR
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -804,21 +822,39 @@ export default function MCPage() {
               OUVRIR BUZZER
             </button>
             
-            <button
-              onClick={handleNextQuestion}
-              style={{
-                width: '100%',
-                padding: '20px 40px',
-                fontSize: '28px',
-                fontWeight: '600',
-                backgroundColor: '#555',
-                color: 'white',
-                borderRadius: '15px',
-                textTransform: 'uppercase',
-              }}
-            >
-              PASSER LA QUESTION
-            </button>
+            {(currentGameState?.currentQuestionIndex || 0) < ((currentGameState?.questions?.length || 1) - 1) ? (
+              <button
+                onClick={handleNextQuestion}
+                style={{
+                  width: '100%',
+                  padding: '20px 40px',
+                  fontSize: '28px',
+                  fontWeight: '600',
+                  backgroundColor: '#555',
+                  color: 'white',
+                  borderRadius: '15px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                PASSER LA QUESTION
+              </button>
+            ) : (
+              <button
+                onClick={handleFinishGame}
+                style={{
+                  width: '100%',
+                  padding: '25px 40px',
+                  fontSize: '36px',
+                  fontWeight: '600',
+                  backgroundColor: '#3B713A',
+                  color: 'white',
+                  borderRadius: '15px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                🏁 TERMINER LE QUIZ
+              </button>
+            )}
           </div>
         )}
 
@@ -832,21 +868,39 @@ export default function MCPage() {
             }}>
               🟢 BUZZER OUVERT
             </p>
-            <button
-              onClick={handleNextQuestion}
-              style={{
-                width: '100%',
-                padding: '20px 40px',
-                fontSize: '28px',
-                fontWeight: '600',
-                backgroundColor: '#555',
-                color: 'white',
-                borderRadius: '15px',
-                textTransform: 'uppercase',
-              }}
-            >
-              PASSER LA QUESTION
-            </button>
+            {(currentGameState?.currentQuestionIndex || 0) < ((currentGameState?.questions?.length || 1) - 1) ? (
+              <button
+                onClick={handleNextQuestion}
+                style={{
+                  width: '100%',
+                  padding: '20px 40px',
+                  fontSize: '28px',
+                  fontWeight: '600',
+                  backgroundColor: '#555',
+                  color: 'white',
+                  borderRadius: '15px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                PASSER LA QUESTION
+              </button>
+            ) : (
+              <button
+                onClick={handleFinishGame}
+                style={{
+                  width: '100%',
+                  padding: '25px 40px',
+                  fontSize: '36px',
+                  fontWeight: '600',
+                  backgroundColor: '#3B713A',
+                  color: 'white',
+                  borderRadius: '15px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                🏁 TERMINER LE QUIZ
+              </button>
+            )}
           </div>
         )}
 

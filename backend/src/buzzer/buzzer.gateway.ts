@@ -22,7 +22,7 @@ interface ClientData {
 
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:3001'],
+    origin: true, // Accepte toutes les origines (pratique pour développement)
     credentials: true,
   },
 })
