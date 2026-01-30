@@ -68,7 +68,7 @@ export default function PlayerPage() {
 
     socket.on('buzz:winner', (data: any) => {
       if (data.playerId === playerData?.playerId) {
-        setMessage(`🎉 Vous avez buzzé en premier ! Répondez maintenant.`)
+        setMessage(`Vous avez buzzé en premier ! Répondez maintenant.`)
         setBuzzDisabled(true)
       } else {
         setMessage(`❌ ${data.playerName} a buzzé avant vous`)
@@ -83,7 +83,7 @@ export default function PlayerPage() {
 
     socket.on('buzz:correct', (data: any) => {
       if (data.playerId === playerData?.playerId) {
-        setMessage(`✅ Bonne réponse ! +${data.points} pts`)
+        setMessage(`Bonne réponse ! +${data.points} pts`)
       }
       setBuzzDisabled(true)
     })
@@ -196,38 +196,100 @@ export default function PlayerPage() {
   // === STEP 1: Join ===
   if (step === 'join') {
     return (
-      <div style={{ padding: '20px' }}>
-        <h1>🎮 Rejoindre une partie</h1>
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '40px 20px',
+      }}>
+        <h1 style={{
+          fontSize: '48px',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          marginBottom: '40px',
+          textShadow: '3px 3px 0px #000',
+        }}>
+          REJOINDRE UNE PARTIE
+        </h1>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: '#ff6b6b', fontSize: '24px', marginBottom: '20px' }}>{error}</p>}
 
-        <div style={{ marginTop: '20px' }}>
-          <label>Code de la partie:</label><br />
+        <div style={{ marginBottom: '30px' }}>
+          <label style={{ 
+            fontSize: '28px',
+            fontWeight: '600',
+            textTransform: 'uppercase',
+            display: 'block',
+            marginBottom: '15px',
+          }}>
+            CODE DE LA PARTIE:
+          </label>
           <input
             type="text"
             value={code}
             onChange={e => setCode(e.target.value.toUpperCase())}
-            placeholder="Ex: AB12CD"
-            style={{ padding: '10px', fontSize: '18px', width: '200px' }}
+            placeholder="EX: AB12CD"
+            style={{
+              width: '100%',
+              maxWidth: '400px',
+              padding: '20px',
+              fontSize: '32px',
+              textAlign: 'center',
+              backgroundColor: 'white',
+              color: '#000',
+              borderRadius: '15px',
+              fontWeight: '600',
+              textTransform: 'uppercase',
+            }}
           />
         </div>
 
-        <div style={{ marginTop: '15px' }}>
-          <label>Votre nom:</label><br />
+        <div style={{ marginBottom: '40px' }}>
+          <label style={{ 
+            fontSize: '28px',
+            fontWeight: '600',
+            textTransform: 'uppercase',
+            display: 'block',
+            marginBottom: '15px',
+          }}>
+            VOTRE NOM:
+          </label>
           <input
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            placeholder="Ex: Alice"
-            style={{ padding: '10px', fontSize: '18px', width: '200px' }}
+            placeholder="EX: ALICE"
+            style={{
+              width: '100%',
+              maxWidth: '400px',
+              padding: '20px',
+              fontSize: '32px',
+              textAlign: 'center',
+              backgroundColor: 'white',
+              color: '#000',
+              borderRadius: '15px',
+              fontWeight: '600',
+              textTransform: 'uppercase',
+            }}
           />
         </div>
 
         <button
           onClick={handleJoin}
-          style={{ marginTop: '20px', fontSize: '18px', padding: '10px 20px' }}
+          style={{
+            width: '100%',
+            maxWidth: '400px',
+            padding: '20px 40px',
+            fontSize: '36px',
+            fontWeight: '600',
+            backgroundColor: '#413677',
+            color: 'white',
+            borderRadius: '15px',
+            textTransform: 'uppercase',
+            marginTop: '20px',
+          }}
         >
-          ✅ Rejoindre
+          REJOINDRE
         </button>
       </div>
     )
@@ -236,19 +298,68 @@ export default function PlayerPage() {
   // === STEP 2: Waiting ===
   if (step === 'waiting') {
     return (
-      <div style={{ padding: '20px' }}>
-        <h1>🎮 En attente...</h1>
-        <p>Bienvenue <strong>{playerData?.name}</strong> !</p>
-        <p>Code de la partie: <strong>{code}</strong></p>
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '40px 20px',
+        textAlign: 'center',
+      }}>
+        <h1 style={{
+          fontSize: '48px',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          marginBottom: '20px',
+          textShadow: '3px 3px 0px #000',
+        }}>
+          EN ATTENTE...
+        </h1>
+        
+        <p style={{ fontSize: '32px', marginBottom: '10px' }}>
+          BIENVENUE {playerData?.name} !
+        </p>
+        
+        <p style={{ fontSize: '28px', marginBottom: '40px' }}>
+          CODE : {code}
+        </p>
 
-        <h3>Joueurs connectés:</h3>
-        <ul>
+        <h3 style={{ 
+          fontSize: '36px',
+          marginBottom: '20px',
+          textTransform: 'uppercase',
+        }}>
+          JOUEURS CONNECTÉS ({game?.players?.length || 0})
+        </h3>
+        
+        <div style={{
+          backgroundColor: '#413677',
+          borderRadius: '15px',
+          padding: '20px',
+          marginBottom: '40px',
+          maxWidth: '500px',
+          margin: '0 auto 40px',
+          border: '4px solid #000',
+        }}>
           {game?.players.map(p => (
-            <li key={p.id}>{p.name} {p.isConnected ? '🟢' : '🔴'}</li>
+            <div key={p.id} style={{
+              fontSize: '28px',
+              padding: '15px',
+              marginBottom: '10px',
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+              <span>{p.name}</span>
+              <span>{p.isConnected ? '🟢' : '🔴'}</span>
+            </div>
           ))}
-        </ul>
+        </div>
 
-        <p style={{ fontSize: '20px', marginTop: '30px' }}>⏳ En attente que le MC démarre...</p>
+        <p style={{ fontSize: '32px', marginTop: '30px' }}>
+          ⏳ EN ATTENTE QUE LE MC DÉMARRE...
+        </p>
       </div>
     )
   }
@@ -264,37 +375,58 @@ export default function PlayerPage() {
       const playerRank = sortedPlayers.findIndex(p => p.id === playerData?.playerId) + 1
       
       return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <h1>🏁 Quiz terminé !</h1>
+        <div style={{ 
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '40px 20px',
+          textAlign: 'center',
+        }}>
+          <h1 style={{
+            fontSize: '54px',
+            fontWeight: '700',
+            textTransform: 'uppercase',
+            marginBottom: '40px',
+            textShadow: '3px 3px 0px #000',
+          }}>
+            🏁 QUIZ TERMINÉ !
+          </h1>
           
           <div style={{ 
             margin: '20px auto', 
-            padding: '20px',
-            backgroundColor: playerRank === 1 ? '#FFD700' : playerRank === 2 ? '#C0C0C0' : playerRank === 3 ? '#CD7F32' : '#f5f5f5',
-            borderRadius: '10px',
-            maxWidth: '400px'
+            padding: '30px',
+            backgroundColor: '#413677',
+            borderRadius: '20px',
+            maxWidth: '400px',
+            border: '4px solid #000',
           }}>
-            <h2>
+            <h2 style={{ fontSize: '48px', marginBottom: '20px' }}>
               {playerRank === 1 ? '🥇' : playerRank === 2 ? '🥈' : playerRank === 3 ? '🥉' : ''}
               {' '}{playerData?.name}
             </h2>
-            <p style={{ fontSize: '32px', fontWeight: 'bold' }}>
-              {player?.score || 0} points
+            <p style={{ fontSize: '64px', fontWeight: 'bold', margin: '20px 0' }}>
+              {player?.score || 0} PTS
             </p>
-            <p style={{ fontSize: '24px', color: '#666' }}>
-              {playerRank === 1 ? 'Champion !' : `${playerRank}${playerRank === 1 ? 'er' : 'ème'} place`}
+            <p style={{ fontSize: '32px' }}>
+              {playerRank === 1 ? 'CHAMPION !' : `${playerRank}ÈME PLACE`}
             </p>
           </div>
 
           <div style={{ 
             margin: '40px auto', 
             maxWidth: '600px',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#413677',
             padding: '30px',
-            borderRadius: '10px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            borderRadius: '20px',
+            border: '4px solid #000',
           }}>
-            <h2 style={{ marginBottom: '30px' }}>🏆 Classement Final</h2>
+            <h2 style={{ 
+              marginBottom: '30px',
+              fontSize: '42px',
+              textTransform: 'uppercase',
+            }}>
+              🏆 SCOREBOARD
+            </h2>
             
             {sortedPlayers.map((p, index) => (
               <div 
@@ -303,104 +435,173 @@ export default function PlayerPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '15px 20px',
-                  margin: '10px 0',
-                  backgroundColor: index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'white',
-                  borderRadius: '8px',
-                  fontSize: '20px',
-                  fontWeight: p.id === playerData?.playerId ? 'bold' : 'normal',
-                  border: p.id === playerData?.playerId ? '3px solid #2196F3' : 'none',
+                  padding: '20px',
+                  margin: '15px 0',
+                  backgroundColor: p.id === playerData?.playerId ? '#3B713A' : 'rgba(255,255,255,0.1)',
+                  borderRadius: '10px',
+                  fontSize: '28px',
+                  fontWeight: '600',
+                  border: p.id === playerData?.playerId ? '3px solid #fff' : 'none',
                 }}
               >
                 <span>
                   {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`} {p.name}
                 </span>
-                <span style={{ fontSize: '24px' }}>{p.score} pts</span>
+                <span style={{ fontSize: '32px' }}>{p.score}</span>
               </div>
             ))}
           </div>
 
           <button 
-            onClick={() => {
-              navigate('/')
-            }}
+            onClick={() => navigate('/')}
             style={{ 
-              fontSize: '20px', 
-              padding: '15px 30px', 
-              backgroundColor: '#2196F3',
+              fontSize: '32px', 
+              padding: '20px 40px', 
+              backgroundColor: '#413677',
               color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              marginTop: '20px'
+              borderRadius: '15px',
+              marginTop: '20px',
+              maxWidth: '400px',
+              width: '100%',
             }}
           >
-            🏠 Retour à l'accueil
+            🏠 RETOUR À L'ACCUEIL
           </button>
         </div>
       )
     }
 
     return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <h1>🎮 {playerData?.name}</h1>
-        <h2>Score: {player?.score || 0}</h2>
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '40px 20px',
+      }}>
+        <h1 style={{
+          fontSize: '54px',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          textAlign: 'center',
+          marginBottom: '10px',
+          textShadow: '3px 3px 0px #000',
+        }}>
+          {playerData?.name}
+        </h1>
+        
+        <h2 style={{
+          fontSize: '36px',
+          textAlign: 'center',
+          marginBottom: '30px',
+        }}>
+          SCORE : {player?.score || 0}
+        </h2>
 
-        <div style={{ marginTop: '30px' }}>
-          <h3>Question {(game?.currentQuestionIndex || 0) + 1} / {game?.questions?.length || 0}</h3>
+        <div style={{ marginBottom: '30px', textAlign: 'center' }}>
+          <h3 style={{ fontSize: '28px', marginBottom: '20px' }}>
+            QUESTION {(game?.currentQuestionIndex || 0) + 1}/{game?.questions?.length || 0}
+          </h3>
           
           {currentQuestion && (
-            <div style={{ fontSize: '24px', margin: '20px 0', padding: '20px', border: '2px solid #333' }}>
+            <div style={{
+              fontSize: '28px',
+              padding: '30px',
+              backgroundColor: '#413677',
+              borderRadius: '15px',
+              border: '4px solid #000',
+              marginBottom: '30px',
+              textTransform: 'uppercase',
+            }}>
               {currentQuestion.text}
             </div>
           )}
 
           {message && (
             <div style={{
-              padding: '15px',
+              padding: '20px',
               marginBottom: '20px',
-              backgroundColor: message.includes('✅') ? '#d4edda' : message.includes('❌') ? '#f8d7da' : '#d1ecf1',
-              fontSize: '20px'
+              backgroundColor: message.includes('✅') ? '#3B713A' : message.includes('❌') ? '#C22F2F' : '#413677',
+              fontSize: '28px',
+              borderRadius: '15px',
+              border: '4px solid #000',
+              textTransform: 'uppercase',
             }}>
               {message}
             </div>
           )}
+        </div>
 
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: '40px',
+        }}>
+          <p style={{
+            fontSize: '32px',
+            marginBottom: '20px',
+            textTransform: 'uppercase',
+            fontWeight: '600',
+          }}>
+            {buzzDisabled ? '🔒 BUZZER FERMÉ' : '🟢 BUZZER OUVERT'}
+          </p>
+          
           <button
             onClick={handleBuzz}
             disabled={buzzDisabled}
             style={{
-              fontSize: '48px',
-              padding: '40px 80px',
-              backgroundColor: buzzDisabled ? '#ccc' : '#ff4444',
+              width: '280px',
+              height: '280px',
+              fontSize: '54px',
+              fontWeight: '700',
+              backgroundColor: buzzDisabled ? '#555' : '#C22F2F',
               color: 'white',
-              border: 'none',
-              borderRadius: '10px',
-              cursor: buzzDisabled ? 'not-allowed' : 'pointer'
+              borderRadius: '50%',
+              border: '6px solid #000',
+              cursor: buzzDisabled ? 'not-allowed' : 'pointer',
+              textTransform: 'uppercase',
             }}
           >
-            {buzzDisabled ? '🔒 BLOQUÉ' : '🔔 BUZZ'}
+            BUZZER
           </button>
         </div>
 
-        <div style={{ marginTop: '40px' }}>
-          <h3>Classement</h3>
-          <table border={1} cellPadding={10} style={{ margin: '0 auto' }}>
-            <thead>
-              <tr>
-                <th>Joueur</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {game?.players.sort((a, b) => b.score - a.score).map(p => (
-                <tr key={p.id} style={{ fontWeight: p.id === playerData?.playerId ? 'bold' : 'normal' }}>
-                  <td>{p.name}</td>
-                  <td>{p.score}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div style={{
+          backgroundColor: '#413677',
+          borderRadius: '15px',
+          padding: '20px',
+          border: '4px solid #000',
+        }}>
+          <h3 style={{
+            fontSize: '36px',
+            marginBottom: '20px',
+            textAlign: 'center',
+            textTransform: 'uppercase',
+          }}>
+            SCOREBOARD
+          </h3>
+          
+          {game?.players.sort((a, b) => b.score - a.score).map(p => (
+            <div
+              key={p.id}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                padding: '15px',
+                marginBottom: '10px',
+                backgroundColor: p.id === playerData?.playerId ? '#3B713A' : 'rgba(255,255,255,0.1)',
+                borderRadius: '10px',
+                fontSize: '28px',
+                fontWeight: '600',
+                border: p.id === playerData?.playerId ? '3px solid #fff' : 'none',
+              }}
+            >
+              <span>{p.name}</span>
+              <span>{p.score}</span>
+            </div>
+          ))}
         </div>
       </div>
     )

@@ -235,17 +235,41 @@ export default function MCPage() {
   // === STEP 1: Créer partie ===
   if (step === 'create') {
     return (
-      <div style={{ padding: '20px' }}>
-        <h1>🎙️ Créer une partie</h1>
+      <div style={{
+        minHeight: '100vh',
+        padding: '40px 20px',
+      }}>
+        <h1 style={{
+          fontSize: '48px',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          marginBottom: '40px',
+          textShadow: '3px 3px 0px #000',
+        }}>
+          CRÉER UNE PARTIE
+        </h1>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: '#ff6b6b', fontSize: '24px', marginBottom: '20px' }}>{error}</p>}
 
-        <div style={{ marginTop: '20px' }}>
-          <h3>Questions</h3>
+        <div style={{ marginTop: '30px' }}>
           {questions.map((q, i) => (
-            <div key={i} style={{ marginBottom: '15px', border: '1px solid #ccc', padding: '10px' }}>
-              <div>
-                <label>Question {i + 1}:</label><br />
+            <div key={i} style={{
+              marginBottom: '30px',
+              backgroundColor: '#413677',
+              borderRadius: '15px',
+              padding: '25px',
+              border: '4px solid #000',
+            }}>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{
+                  fontSize: '24px',
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  display: 'block',
+                  marginBottom: '10px',
+                }}>
+                  QUESTION {i + 1}:
+                </label>
                 <input
                   type="text"
                   value={q.text}
@@ -254,12 +278,29 @@ export default function MCPage() {
                     newQ[i].text = e.target.value
                     setQuestions(newQ)
                   }}
-                  style={{ width: '100%', padding: '5px' }}
-                  placeholder="Ex: Quelle est la capitale de la France ?"
+                  style={{
+                    width: '100%',
+                    padding: '15px',
+                    fontSize: '24px',
+                    backgroundColor: 'white',
+                    color: '#000',
+                    borderRadius: '10px',
+                    textTransform: 'uppercase',
+                  }}
+                  placeholder="EX: QUELLE EST LA CAPITAL"
                 />
               </div>
-              <div style={{ marginTop: '10px' }}>
-                <label>Réponse (optionnel):</label><br />
+              
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{
+                  fontSize: '24px',
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  display: 'block',
+                  marginBottom: '10px',
+                }}>
+                  RÉPONSE (OPTIONEL):
+                </label>
                 <input
                   type="text"
                   value={q.answer}
@@ -268,12 +309,29 @@ export default function MCPage() {
                     newQ[i].answer = e.target.value
                     setQuestions(newQ)
                   }}
-                  style={{ width: '100%', padding: '5px' }}
-                  placeholder="Ex: Paris"
+                  style={{
+                    width: '100%',
+                    padding: '15px',
+                    fontSize: '24px',
+                    backgroundColor: 'white',
+                    color: '#000',
+                    borderRadius: '10px',
+                    textTransform: 'uppercase',
+                  }}
+                  placeholder="EX: PARIS"
                 />
               </div>
-              <div style={{ marginTop: '10px' }}>
-                <label>Points:</label><br />
+              
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{
+                  fontSize: '24px',
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  display: 'block',
+                  marginBottom: '10px',
+                }}>
+                  POINTS:
+                </label>
                 <input
                   type="number"
                   value={q.points}
@@ -282,30 +340,75 @@ export default function MCPage() {
                     newQ[i].points = parseInt(e.target.value) || 1
                     setQuestions(newQ)
                   }}
-                  style={{ width: '80px', padding: '5px' }}
+                  style={{
+                    width: '150px',
+                    padding: '15px',
+                    fontSize: '32px',
+                    textAlign: 'center',
+                    backgroundColor: 'white',
+                    color: '#000',
+                    borderRadius: '10px',
+                    fontWeight: '600',
+                  }}
                 />
               </div>
+              
               {questions.length > 1 && (
                 <button
                   onClick={() => setQuestions(questions.filter((_, idx) => idx !== i))}
-                  style={{ marginTop: '10px' }}
+                  style={{
+                    padding: '12px 25px',
+                    fontSize: '22px',
+                    backgroundColor: '#C22F2F',
+                    color: 'white',
+                    borderRadius: '10px',
+                  }}
                 >
-                  ❌ Supprimer
+                  ❌ SUPPRIMER
                 </button>
               )}
             </div>
           ))}
 
-          <button onClick={() => setQuestions([...questions, { text: '', answer: '', points: 1 }])}>
-            ➕ Ajouter une question
+          <button
+            onClick={() => setQuestions([...questions, { text: '', answer: '', points: 1 }])}
+            style={{
+              width: '80px',
+              height: '80px',
+              fontSize: '42px',
+              backgroundColor: '#3B713A',
+              color: 'white',
+              borderRadius: '50%',
+              border: '4px solid #000',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '20px auto',
+            }}
+          >
+            +
           </button>
         </div>
 
         <button
           onClick={handleCreateGame}
-          style={{ marginTop: '20px', fontSize: '18px', padding: '10px 20px' }}
+          style={{
+            width: '100%',
+            maxWidth: '500px',
+            padding: '20px 40px',
+            fontSize: '36px',
+            fontWeight: '600',
+            backgroundColor: '#413677',
+            color: 'white',
+            borderRadius: '15px',
+            textTransform: 'uppercase',
+            marginTop: '30px',
+            display: 'block',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
         >
-          ✅ Créer la partie
+          CRÉER UNE PARTIE
         </button>
       </div>
     )
@@ -314,36 +417,81 @@ export default function MCPage() {
   // === STEP 2: Lobby (attente joueurs) ===
   if (step === 'lobby') {
     return (
-      <div style={{ padding: '20px' }}>
-        <h1>🎙️ Lobby - Code: <strong>{code}</strong></h1>
+      <div style={{
+        minHeight: '100vh',
+        padding: '40px 20px',
+        textAlign: 'center',
+      }}>
+        <h1 style={{
+          fontSize: '48px',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          marginBottom: '20px',
+          textShadow: '3px 3px 0px #000',
+        }}>
+          LOBBY - CODE: {code}
+        </h1>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: '#ff6b6b', fontSize: '24px', marginBottom: '20px' }}>{error}</p>}
 
-        <p>Partagez ce code aux joueurs pour qu'ils rejoignent !</p>
-        <p>Lien joueur: <code>http://localhost:5173/player/{code}</code></p>
+        <p style={{ fontSize: '20px', marginBottom: '15px' }}>
+          LIEN JOUEUR: HTTP://LOCALHOST:5173/PLAYER/{code}
+        </p>
 
-        <h3>Joueurs connectés ({game?.players.length || 0})</h3>
-        <ul>
-          {game?.players.map(p => (
-            <li key={p.id}>
-              {p.name} {p.isConnected ? '🟢' : '🔴'}
-            </li>
+        <div style={{
+          backgroundColor: '#413677',
+          borderRadius: '15px',
+          padding: '30px',
+          marginBottom: '40px',
+          border: '4px solid #000',
+          maxWidth: '600px',
+          margin: '40px auto',
+        }}>
+          <h3 style={{
+            fontSize: '36px',
+            marginBottom: '20px',
+            textTransform: 'uppercase',
+          }}>
+            QUESTIONS ({game?.questions.length || 0})
+          </h3>
+          
+          {game?.questions.map((q, index) => (
+            <div key={q.id} style={{
+              padding: '15px',
+              marginBottom: '10px',
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              borderRadius: '10px',
+              textAlign: 'left',
+            }}>
+              <div style={{ fontSize: '24px', fontWeight: '600' }}>
+                {index + 1}. {q.text} ({q.points}PTS)
+              </div>
+              {q.answer && (
+                <div style={{ fontSize: '20px', marginTop: '5px', opacity: 0.8 }}>
+                  RÉPONSE: {q.answer}
+                </div>
+              )}
+            </div>
           ))}
-        </ul>
-
-        <h3>Questions ({game?.questions.length || 0})</h3>
-        <ol>
-          {game?.questions.map(q => (
-            <li key={q.id}>{q.text} ({q.points} pts)</li>
-          ))}
-        </ol>
+        </div>
 
         <button
           onClick={handleStartGame}
           disabled={!game || game.players.length === 0}
-          style={{ fontSize: '18px', padding: '10px 20px', marginTop: '20px' }}
+          style={{
+            width: '100%',
+            maxWidth: '500px',
+            padding: '25px 40px',
+            fontSize: '36px',
+            fontWeight: '600',
+            backgroundColor: game && game.players.length > 0 ? '#3B713A' : '#555',
+            color: 'white',
+            borderRadius: '15px',
+            textTransform: 'uppercase',
+            marginTop: '20px',
+          }}
         >
-          🚀 Démarrer la partie
+          DÉMARRER
         </button>
       </div>
     )
@@ -365,21 +513,34 @@ export default function MCPage() {
       console.log('Showing finish screen, players:', sortedPlayers)
       
       return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <h1>🏁 Quiz terminé !</h1>
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '40px 20px',
+          textAlign: 'center',
+        }}>
+          <h1 style={{
+            fontSize: '54px',
+            fontWeight: '700',
+            textTransform: 'uppercase',
+            marginBottom: '40px',
+            textShadow: '3px 3px 0px #000',
+          }}>
+            🏁 QUIZ TERMINÉ !
+          </h1>
           
-          {/* Notification temporaire */}
           {notification && (
             <div style={{
               position: 'fixed',
               top: '20px',
               right: '20px',
-              backgroundColor: '#4CAF50',
+              backgroundColor: '#3B713A',
               color: 'white',
-              padding: '15px 20px',
-              borderRadius: '8px',
-              fontSize: '18px',
-              boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+              padding: '20px 30px',
+              borderRadius: '15px',
+              fontSize: '24px',
+              border: '3px solid #000',
               zIndex: 1000,
             }}>
               {notification}
@@ -389,12 +550,18 @@ export default function MCPage() {
           <div style={{ 
             margin: '40px auto', 
             maxWidth: '600px',
-            backgroundColor: '#f5f5f5',
-            padding: '30px',
-            borderRadius: '10px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            backgroundColor: '#413677',
+            padding: '40px',
+            borderRadius: '20px',
+            border: '4px solid #000',
           }}>
-            <h2 style={{ marginBottom: '30px' }}>🏆 Classement Final</h2>
+            <h2 style={{
+              marginBottom: '30px',
+              fontSize: '42px',
+              textTransform: 'uppercase',
+            }}>
+              🏆 SCOREBOARD
+            </h2>
             
             {sortedPlayers.map((player, index) => (
               <div 
@@ -403,162 +570,336 @@ export default function MCPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '15px 20px',
-                  margin: '10px 0',
-                  backgroundColor: index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : 'white',
-                  borderRadius: '8px',
-                  fontSize: '20px',
-                  fontWeight: index < 3 ? 'bold' : 'normal',
+                  padding: '20px',
+                  margin: '15px 0',
+                  backgroundColor: index === 0 ? '#3B713A' : 'rgba(255,255,255,0.1)',
+                  borderRadius: '10px',
+                  fontSize: '28px',
+                  fontWeight: '600',
                 }}
               >
                 <span>
                   {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`} {player.name}
                 </span>
-                <span style={{ fontSize: '24px' }}>{player.score} pts</span>
+                <span style={{ fontSize: '32px' }}>{player.score}</span>
               </div>
             ))}
           </div>
 
           <button 
-            onClick={() => {
-              navigate('/')
-            }}
+            onClick={() => navigate('/')}
             style={{ 
-              fontSize: '20px', 
-              padding: '15px 30px', 
-              backgroundColor: '#2196F3',
+              fontSize: '32px', 
+              padding: '20px 40px', 
+              backgroundColor: '#413677',
               color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              marginTop: '20px'
+              borderRadius: '15px',
+              marginTop: '20px',
+              maxWidth: '400px',
+              width: '100%',
+              marginLeft: 'auto',
+              marginRight: 'auto',
             }}
           >
-            🏠 Retour à l'accueil
+            🏠 RETOUR À L'ACCUEIL
           </button>
         </div>
       )
     }
 
     return (
-      <div style={{ padding: '20px' }}>
-        <h1>🎙️ Partie en cours - Code: {code}</h1>
+      <div style={{
+        minHeight: '100vh',
+        padding: '40px 20px',
+      }}>
+        <h1 style={{
+          fontSize: '48px',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          marginBottom: '20px',
+          textShadow: '3px 3px 0px #000',
+          textAlign: 'center',
+        }}>
+          CODE: {code}
+        </h1>
 
-        {/* Notification temporaire */}
         {notification && (
           <div style={{
             position: 'fixed',
             top: '20px',
             right: '20px',
-            backgroundColor: '#4CAF50',
+            backgroundColor: '#3B713A',
             color: 'white',
-            padding: '15px 20px',
-            borderRadius: '8px',
-            fontSize: '18px',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+            padding: '20px 30px',
+            borderRadius: '15px',
+            fontSize: '24px',
+            border: '3px solid #000',
             zIndex: 1000,
-            animation: 'fadeIn 0.3s'
           }}>
             {notification}
           </div>
         )}
 
-        <h3>
-          Question {(currentGameState?.currentQuestionIndex || 0) + 1} / {currentGameState?.questions?.length || 0}
+        <h3 style={{
+          fontSize: '32px',
+          textAlign: 'center',
+          marginBottom: '30px',
+        }}>
+          QUESTION {(currentGameState?.currentQuestionIndex || 0) + 1} SUR {currentGameState?.questions?.length || 0}
         </h3>
 
         {currentQuestion && (
-          <div style={{ border: '2px solid #333', padding: '15px', marginTop: '10px' }}>
-            <h2>{currentQuestion.text}</h2>
+          <div style={{
+            backgroundColor: '#413677',
+            borderRadius: '15px',
+            padding: '25px',
+            marginBottom: '30px',
+            border: '4px solid #000',
+          }}>
+            <h2 style={{ fontSize: '32px', marginBottom: '15px', textTransform: 'uppercase' }}>
+              {currentQuestion.text}
+            </h2>
+            <div style={{
+              display: 'flex',
+              gap: '20px',
+              flexWrap: 'wrap',
+              fontSize: '24px',
+            }}>
+              <div>LA RÉPONSE</div>
+              <div>{currentQuestion.points}PTS</div>
+            </div>
             {currentQuestion.answer && (
-              <p><strong>Réponse:</strong> {currentQuestion.answer}</p>
+              <p style={{ marginTop: '15px', fontSize: '28px' }}>
+                {currentQuestion.answer}
+              </p>
             )}
-            <p><strong>Points:</strong> {currentQuestion.points}</p>
           </div>
         )}
 
-        <div style={{ marginTop: '20px' }}>
-          <h4>État: {currentState?.status || 'IDLE'}</h4>
-
-          {currentState?.status === 'IDLE' && (
-            <div>
-              <button onClick={handleOpenBuzz} style={{ fontSize: '18px', padding: '10px 20px', marginRight: '10px' }}>
-                🔓 Ouvrir le buzz
-              </button>
-              <button onClick={handleNextQuestion} style={{ fontSize: '18px', padding: '10px 20px', backgroundColor: '#666', color: 'white' }}>
-                ⏭️ Passer la question
-              </button>
+        <div style={{
+          backgroundColor: '#413677',
+          borderRadius: '15px',
+          padding: '25px',
+          marginBottom: '30px',
+          border: '4px solid #000',
+        }}>
+          <h3 style={{
+            fontSize: '36px',
+            marginBottom: '20px',
+            textTransform: 'uppercase',
+            textAlign: 'center',
+          }}>
+            SCOREBOARD
+          </h3>
+          
+          {currentGameState?.players?.sort((a, b) => b.score - a.score).map(p => (
+            <div
+              key={p.id}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                padding: '15px',
+                marginBottom: '10px',
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                borderRadius: '10px',
+                fontSize: '28px',
+                fontWeight: '600',
+              }}
+            >
+              <span>{p.name}</span>
+              <span>{p.score}</span>
             </div>
-          )}
+          ))}
+        </div>
 
-          {currentState?.status === 'OPEN' && (
-            <div>
-              <p style={{ color: 'green', fontSize: '20px' }}>🟢 Buzz ouvert ! En attente...</p>
-              <button onClick={handleNextQuestion} style={{ fontSize: '16px', padding: '8px 16px', backgroundColor: '#666', color: 'white', marginTop: '10px' }}>
-                ⏭️ Passer la question
-              </button>
-            </div>
-          )}
-
-          {currentState?.status === 'LOCKED' && currentState.winnerPlayer && (
-            <div style={{ border: '2px solid orange', padding: '10px', marginTop: '10px' }}>
-              <h3>🔔 {currentState.winnerPlayer.name} a buzzé !</h3>
+        {currentState?.status === 'LOCKED' && currentState.winnerPlayer && (
+          <div style={{
+            backgroundColor: '#413677',
+            borderRadius: '15px',
+            padding: '30px',
+            marginBottom: '30px',
+            border: '4px solid #000',
+            textAlign: 'center',
+          }}>
+            <h3 style={{ fontSize: '42px', marginBottom: '25px', textTransform: 'uppercase' }}>
+              {currentState.winnerPlayer.name} À BUZZÉ !
+            </h3>
+            
+            <div style={{
+              display: 'flex',
+              gap: '15px',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+            }}>
               <button
                 onClick={() => handleJudgeBuzz(currentState.winnerPlayer.id, true)}
-                style={{ marginRight: '10px', padding: '10px', fontSize: '16px', backgroundColor: 'green', color: 'white' }}
+                style={{
+                  padding: '20px 40px',
+                  fontSize: '32px',
+                  fontWeight: '600',
+                  backgroundColor: '#3B713A',
+                  color: 'white',
+                  borderRadius: '15px',
+                  flex: '1',
+                  minWidth: '140px',
+                }}
               >
-                ✅ Correct
+                CORRECT
               </button>
+              
               <button
                 onClick={() => handleJudgeBuzz(currentState.winnerPlayer.id, false)}
-                style={{ padding: '10px', fontSize: '16px', backgroundColor: 'red', color: 'white' }}
+                style={{
+                  padding: '20px 40px',
+                  fontSize: '32px',
+                  fontWeight: '600',
+                  backgroundColor: '#C22F2F',
+                  color: 'white',
+                  borderRadius: '15px',
+                  flex: '1',
+                  minWidth: '140px',
+                }}
               >
-                ❌ Faux
+                FAUX
               </button>
-              <button 
-                onClick={handleNextQuestion} 
-                style={{ marginLeft: '10px', padding: '10px', fontSize: '16px', backgroundColor: '#666', color: 'white' }}
+              
+              <button
+                onClick={handleNextQuestion}
+                style={{
+                  padding: '20px 40px',
+                  fontSize: '32px',
+                  fontWeight: '600',
+                  backgroundColor: '#555',
+                  color: 'white',
+                  borderRadius: '15px',
+                  flex: '1',
+                  minWidth: '140px',
+                }}
               >
-                ⏭️ Passer
+                PASSER
               </button>
             </div>
-          )}
+          </div>
+        )}
 
-          {currentState?.status === 'RESOLVED' && (
-            <div>
-              <p style={{ color: 'blue', fontSize: '18px' }}>✅ Question résolue</p>
-              {(currentGameState?.currentQuestionIndex || 0) < ((currentGameState?.questions?.length || 1) - 1) ? (
-                <button onClick={handleNextQuestion} style={{ fontSize: '18px', padding: '10px 20px' }}>
-                  ➡️ Question suivante
-                </button>
-              ) : (
-                <button onClick={handleFinishGame} style={{ fontSize: '18px', padding: '10px 20px', backgroundColor: '#4CAF50', color: 'white' }}>
-                  🏁 Terminer le quiz
-                </button>
-              )}
-            </div>
-          )}
-        </div>
+        {currentState?.status === 'IDLE' && (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px',
+          }}>
+            <button
+              onClick={handleOpenBuzz}
+              style={{
+                width: '100%',
+                padding: '25px 40px',
+                fontSize: '36px',
+                fontWeight: '600',
+                backgroundColor: '#413677',
+                color: 'white',
+                borderRadius: '15px',
+                textTransform: 'uppercase',
+              }}
+            >
+              OUVRIR BUZZER
+            </button>
+            
+            <button
+              onClick={handleNextQuestion}
+              style={{
+                width: '100%',
+                padding: '20px 40px',
+                fontSize: '28px',
+                fontWeight: '600',
+                backgroundColor: '#555',
+                color: 'white',
+                borderRadius: '15px',
+                textTransform: 'uppercase',
+              }}
+            >
+              PASSER LA QUESTION
+            </button>
+          </div>
+        )}
 
-        <div style={{ marginTop: '30px' }}>
-          <h3>Scoreboard</h3>
-          <table border={1} cellPadding={10}>
-            <thead>
-              <tr>
-                <th>Joueur</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentGameState?.players?.sort((a, b) => b.score - a.score).map(p => (
-                <tr key={p.id}>
-                  <td>{p.name}</td>
-                  <td>{p.score}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {currentState?.status === 'OPEN' && (
+          <div style={{ textAlign: 'center' }}>
+            <p style={{
+              fontSize: '36px',
+              marginBottom: '20px',
+              textTransform: 'uppercase',
+              fontWeight: '600',
+            }}>
+              🟢 BUZZER OUVERT
+            </p>
+            <button
+              onClick={handleNextQuestion}
+              style={{
+                width: '100%',
+                padding: '20px 40px',
+                fontSize: '28px',
+                fontWeight: '600',
+                backgroundColor: '#555',
+                color: 'white',
+                borderRadius: '15px',
+                textTransform: 'uppercase',
+              }}
+            >
+              PASSER LA QUESTION
+            </button>
+          </div>
+        )}
+
+        {currentState?.status === 'RESOLVED' && (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px',
+          }}>
+            <p style={{
+              fontSize: '32px',
+              textAlign: 'center',
+              marginBottom: '20px',
+              textTransform: 'uppercase',
+            }}>
+              ✅ QUESTION RÉSOLUE
+            </p>
+            
+            {(currentGameState?.currentQuestionIndex || 0) < ((currentGameState?.questions?.length || 1) - 1) ? (
+              <button
+                onClick={handleNextQuestion}
+                style={{
+                  width: '100%',
+                  padding: '25px 40px',
+                  fontSize: '36px',
+                  fontWeight: '600',
+                  backgroundColor: '#3B713A',
+                  color: 'white',
+                  borderRadius: '15px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                PASSER LA QUESTION
+              </button>
+            ) : (
+              <button
+                onClick={handleFinishGame}
+                style={{
+                  width: '100%',
+                  padding: '25px 40px',
+                  fontSize: '36px',
+                  fontWeight: '600',
+                  backgroundColor: '#3B713A',
+                  color: 'white',
+                  borderRadius: '15px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                🏁 TERMINER LE QUIZ
+              </button>
+            )}
+          </div>
+        )}
       </div>
     )
   }
